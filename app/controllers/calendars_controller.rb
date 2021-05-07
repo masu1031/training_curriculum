@@ -15,7 +15,7 @@ class CalendarsController < ApplicationController
   private
 
   def plan_params
-    params.require(:calendars).permit(:date, :plan)
+    params.require(:plan).permit(:date, :plan)
   end
 
   def get_Week
@@ -34,7 +34,19 @@ class CalendarsController < ApplicationController
       plans.each do |plan|
         today_plans.push(plan.plan) if plan.date == @todays_date + x
       end
-      days = { month: (@todays_date + x).month, date: (@todays_date+x).day, plans: today_plans}
+      # コメントアウトしているのが、カリキュラムに沿った記述
+      # 実装したコードは、配列の負の index の動作を利用した記述
+      # メンターの方に、コメントアウトを記述して、提出してよい、と確認しました
+
+      # wday_num = Date.today.wday + x 
+      # if wday_num >= 7
+      #   wday_num = wday_num -7
+      # end
+      wday_num = Date.today.wday
+
+      # days = { :month => (@todays_date + x).month, :date => (@todays_date + x).day, :plans => today_plans, :wday => wdays[wday_num]}
+      # @week_days.push(days)
+      days = { month: (@todays_date + x).month, date: (@todays_date + x).day, plans: today_plans, wday: wdays[(wday_num - 7 + x )]}
       @week_days.push(days)
     end
 
